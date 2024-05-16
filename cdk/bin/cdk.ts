@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { CdkStack } from '../lib/cdk-stack';
+import { CdkStack } from '../lib/test';
+import { Bucketcreation} from '../lib/s3bucketcreation'
+import {Instance} from '../lib/instance'
+import {Rdsstack} from '../lib/rdsstack'
 
 const app = new cdk.App();
 new CdkStack(app, 'CdkStack', {
@@ -11,11 +14,30 @@ new CdkStack(app, 'CdkStack', {
 
   /* Uncomment the next line to specialize this stack for the AWS Account
    * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION }
 
   /* Uncomment the next line if you know exactly what Account and Region you
    * want to deploy the stack to. */
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+
+ 
 });
+
+new Bucketcreation(app , 'Bucketcreation' , {
+  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION }
+
+});
+
+new Instance(app , 'Instance' , {
+  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION }
+
+});
+
+new Rdsstack(app,'Rdsstack' , {
+  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION }
+});
+
+
+
