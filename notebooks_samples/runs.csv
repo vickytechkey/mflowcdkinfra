@@ -1,0 +1,3 @@
+Start Time,Duration,Run ID,Name,Source Type,Source Name,User,Status,max_iter,multi_class,random_state,solver,accuracy,Training Info
+2024-05-18 13:55:37,13.4s,b0db8ca7b0c3498e9819803890c45192,tasteful-eel-151,LOCAL,/opt/anaconda3/lib/python3.11/site-packages/ipykernel_launcher.py,krvigne,FINISHED,1000,auto,8888,lbfgs,1,Basic LR model for iris data
+2024-05-18 13:53:52,16.3s,4ae61b43e05a4be0964e881c4d9faa8e,tasteful-stag-232,LOCAL,/opt/anaconda3/lib/python3.11/site-packages/ipykernel_launcher.py,krvigne,FINISHED,1000,auto,8888,lbfgs,1,Basic LR model for iris data
