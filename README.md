@@ -7,4 +7,4 @@ After your infra created execute the following two commands in your EC2 instance
 python3 -m pip install mlflow
 mlflow server --host 0.0.0.0 --port 5000
 
-<img src="./images/homepage.png" width="350" title="HomePage">
+<img src="./homepage.png" width="350" title="HomePage">
