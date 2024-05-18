@@ -13,7 +13,7 @@ export class Names {
     constructor( account_name : string="krvignemay152024"){
         this.mflow_bucket_name = account_name + "mflowbucket";
         this.ec2securitygroup =  account_name + "ecsecuritygroup1";
-        this.ipaddress = "122.164.0.0/16";
+        this.ipaddress = "122.0.0.0/8";
         this.keyname = "krvignemflow";
         this.vpcname = "mflowvpcnetwork";
         this.instancename = account_name+"mflowec2instance";

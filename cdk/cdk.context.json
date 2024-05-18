@@ -51,5 +51,6 @@
         ]
       }
     ]
-  }
+  },
+  "ssm:account=590183941202:parameterName=/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64:region=us-east-1": "ami-0bb84b8ffd87024d8"
 }

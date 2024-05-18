@@ -5,44 +5,20 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import {Names} from './configuration'
 import { Construct } from 'constructs';
 
+const app = new cdk.App();
+
 export class Instance extends  cdk.Stack {
   constructor(scope: Construct, id: string ,props?: cdk.StackProps) {
     super(scope, id , props);
     let n = new Names()
 
-   
-
-    // const vpc = new ec2.Vpc(this, 'MyVpc', {
-    //   cidr: '10.3.0.0/16',
-    //   maxAzs: 2, // Use 2 Availability Zones for high availability
-    //   subnetConfiguration: [
-    //     {
-    //       cidrMask: 24,
-    //       name: 'pubsub1',
-    //       subnetType: ec2.SubnetType.PUBLIC,
-    //     },
-    //     {
-    //       cidrMask: 24,
-    //       name: 'prsub1',
-    //       subnetType: ec2.SubnetType.PRIVATE,
-    //     },
-    //   ],
-    //   vpcName:n.vpcname
-    // });
-
+   // default vpc
   const vpc = ec2.Vpc.fromLookup(this, 'DefaultVpc', {
       isDefault: true, // Lookup the default VPC
   
     });
 
-    // const igw = new ec2.CfnInternetGateway(this, n.Ig );
-    // const attachment = new ec2.CfnVPCGatewayAttachment(this, 'newattachment', {
-    //   vpcId: vpc.vpcId,
-    //   internetGatewayId: igw.ref,
-    // });
-
-
-    // Create a security group
+   // Create a security group
     const securityGroup = new ec2.SecurityGroup(this, 'MySecurityGroup', {
       vpc: vpc,
       allowAllOutbound: true, // Allow all outbound traffic
@@ -50,9 +26,7 @@ export class Instance extends  cdk.Stack {
     });
 
     // Add inbound rules with prefix
-    securityGroup.addIngressRule(ec2.Peer.ipv4(n.ipaddress), ec2.Port.tcp(80), 'Allow HTTP traffic');
-    securityGroup.addIngressRule(ec2.Peer.ipv4(n.ipaddress), ec2.Port.tcp(443), 'Allow HTTPS traffic');
-    securityGroup.addIngressRule(ec2.Peer.ipv4(n.ipaddress), ec2.Port.tcp(22), 'Allow SSH traffic');
+    securityGroup.addIngressRule(ec2.Peer.ipv4(n.ipaddress), ec2.Port.allTraffic(), 'Allow all traffic from the ip address');
 
 
      // Create the IAM role
@@ -64,24 +38,32 @@ export class Instance extends  cdk.Stack {
     // Attach AdministratorAccess policy to the role
     role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'));
 
+    const userData = ec2.UserData.forLinux();
+    userData.addCommands("sudo yum install python311 -y")
+    userData.addCommands("sudo yum install python3-pip -y")
+    userData.addCommands("python3 -m pip install mlflow")
+    userData.addCommands("mlflow server --host 0.0.0.0 --port 5000")
+
+
     // Create an EC2 instance
     const instance = new ec2.Instance(this, 'MyInstance', {
       vpc : vpc,
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.M5, ec2.InstanceSize.XLARGE), // m5.xlarge instance type
-      machineImage: new ec2.AmazonLinuxImage(), // Using Amazon Linux AMI
+      machineImage: new ec2.AmazonLinux2023ImageSsmParameter({
+        kernel: ec2.AmazonLinux2023Kernel.KERNEL_6_1,
+      }), // Using Amazon Linux AMI
       securityGroup: securityGroup, // Attach the security group
       keyName: n.keyname,
-      instanceName : n.instancename
+      instanceName : n.instancename,
+      userData : userData
     });
 
-    new cdk.CfnOutput(this, 'InstancePublicIp', {
-      value: instance.instancePublicIp,
-      description: 'Public IP address of the EC2 instance',
-      exportName: 'Instace:InstancePublicIp',
-    });
-
-    
+    // sudo yum install python311 -y
+    // sudo yum install python3-pip -y
+    //python3 -m pip install mlflow
+    // mlflow server --host 0.0.0.0 --port 5000
     
    
   }
 }
+
